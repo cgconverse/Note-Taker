@@ -2,7 +2,6 @@
 const fs = require("fs");
 const path = require("path");
 const db = require("../db/db.json");
-const uuidv1 = require("uuid/v1");
 const util = require("util");
 
 // Use promisify to read and write files
@@ -34,11 +33,11 @@ module.exports = function (app) {
             text,
         }
 
-        let db = readFileAsync(path.join(__dirname + "/../db/db.json"), "utf8").then(data => {
+        let db = readFileAsync(path.join(__dirname + "../db/db.json"), "utf8").then(data => {
             // Return response as json object
             db = JSON.parse(data);
             db.push(newData);
-            fs.writeFile(path.join(__dirname + "/../db/db.json"), JSON.stringify(db), (err) => err ? console.error(err) : console.log("Note added"));
+            fs.writeFile(path.join(__dirname + "../db/db.json"), JSON.stringify(db), (err) => err ? console.error(err) : console.log("Note added"));
             res.json(db);
         }).catch(err => {
             if (err) throw err;
