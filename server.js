@@ -8,15 +8,39 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 
-/*The “extended” syntax allows for rich objects and arrays to be encoded into 
-the URL-encoded format, allowing for a JSON-like experience with URL-encoded.
-Reference: https://expressjs.com/en/4x/api.html#express.urlencoded*/
+//Middleware
 app.use(express.urlencoded({ extended: true }));
-
-// express.json() is a method inbuilt in express to recognize the incoming Request Object as a JSON Object
 app.use(express.json());
 
 //This configures the app
 app.use(express.static("public"))
 const dbData = JSON.parse(fs.readFileSync("db/db.json", "utf8"))
 let currentId = 2
+
+//Data API routes
+
+app.get("/api/notes", function(req, res) {
+    res.send(dbData)
+});
+
+app.post("/api/notes", function(req, res) {
+    dbData.push({
+        ...req.body,
+        id: currentId
+    })
+    currentId++
+    fs.writeFileSync("db/db.json", JSON.stringify(dbData), "utf8")
+    res.send(dbData)
+});
+
+//API route to delete notes
+app.delete("/api/notes/:id", (req, res) => {
+    const id = req.params.id;
+    const dbDataTemp = dbData.findIndex(p => p.id == id);
+    dbData.splice(dbDataTemp, 1);
+    fs.writeFile("./db/db.json", JSON.stringify(dbData), err => {
+        if (err) throw err
+        res.json(dbData)
+    })
+    res.sendFile(path.join(__dirname, "public/notes.html"));
+})
