@@ -19,21 +19,24 @@ let currentId = 2
 
 //Data API routes
 
+//reads the db.json file and returns all saved notes as JSON
 app.get("/api/notes", function(req, res) {
     res.send(dbData)
 });
 
+//receives a new note and saves it on the request body
 app.post("/api/notes", function(req, res) {
     dbData.push({
         ...req.body,
         id: currentId
     })
+    //adds note to db.json and returns the new note to the client
     currentId++
     fs.writeFileSync("db/db.json", JSON.stringify(dbData), "utf8")
     res.send(dbData)
 });
 
-//API route to delete notes
+//API route to delete the notes by id
 app.delete("/api/notes/:id", (req, res) => {
     const id = req.params.id;
     const dbDataTemp = dbData.findIndex(p => p.id == id);
@@ -56,3 +59,9 @@ app.get("/notes", function(req, res) {
 app.get("*", function(req, res) {
     res.sendFile(path.join(__dirname, "public/index.html"));
 });
+
+app.listen(PORT, function() {
+    // Log (server-side) when our server has started
+    console.log("Server listening on: http://localhost:" + PORT);
+});
+
