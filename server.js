@@ -44,3 +44,10 @@ app.delete("/api/notes/:id", (req, res) => {
     })
     res.sendFile(path.join(__dirname, "public/notes.html"));
 })
+
+//HTML Routes
+
+//returns the notes.html file
+app.get("/notes", function(req, res) {
+    res.sendFile(path.join(__dirname, "public/notes.html"));
+});
