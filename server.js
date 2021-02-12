@@ -12,6 +12,10 @@ const PORT = process.env.PORT || 8080;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Middleware to load css and javascript files from the public folder
+app.use(express.static('public'))
+
+
 //This configures the app
 app.use(express.static("public"))
 const dbData = JSON.parse(fs.readFileSync("db/db.json", "utf8"))
@@ -61,7 +65,7 @@ app.get("*", function(req, res) {
 });
 
 app.listen(PORT, function() {
-    // Log (server-side) when our server has started
+    // Logging when the server has started
     console.log("Server listening on: http://localhost:" + PORT);
 });
 
