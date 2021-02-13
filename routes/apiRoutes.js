@@ -12,21 +12,23 @@ const writeFileAsync = util.promisify(fs.writeFile);
 module.exports = function (app) {
 
     // Get API requests
-    app.get("/api/notes", function (req, res) {
+    app.get("/api/notes", async function (_req, res) {
         // Reads the db.json file
-        return readFileAsync(path.join(__dirname + "/../db/db.json"), "utf8").then(data => {
+        try {
+            const data = await readFileAsync(path.join(__dirname + "../db/db.json"), "utf8");
             // Returns all saved notes as JSON 
             res.json(JSON.parse(data));
-        }).catch(err => {
-            if (err) throw err;
-        })
+        } catch (err) {
+            if (err)
+                throw err;
+        }
     });
 
     // Post API requests
     app.post("/api/notes", function (req, res) {
         const { title, text } = req.body
         console.log(req.body);
-        id = uuidv1();
+        // id = uuidv1();
         const newData = {
             id,
             title,
@@ -49,11 +51,11 @@ module.exports = function (app) {
         const id = req.params.id;
         const dbDataTemp = dbData.findIndex(p => p.id == id);
         dbData.splice(dbDataTemp, 1);
-        fs.writeFile("./db/db.json", JSON.stringify(dbData), err => {
+        fs.writeFile("../db/db.json", JSON.stringify(dbData), err => {
             if (err) throw err
             res.json(dbData)
         })
-        res.sendFile(path.join(__dirname, "public/notes.html"));
+        res.sendFile(path.join(__dirname, "../public/notes.html"));
     })
 
 

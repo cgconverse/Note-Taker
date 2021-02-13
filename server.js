@@ -10,11 +10,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Middleware to load css and javascript files from the public folder
-app.use(express.static('public'))
+app.use(express.static("public"))
 
 // Routes
-require("./Develop/routes/apiRoutes")(app);
-require("./Develop/routes/htmlRoutes")(app);
+require("./routes/apiRoutes")(app);
+require("./routes/htmlRoutes")(app);
 
 // Logging when the server has started
 app.listen(PORT, function() {
